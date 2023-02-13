@@ -10,5 +10,14 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+
+    /** If you set esmExternals to true, this plugins assumes that 
+      all external dependencies are ES modules */
+
+    commonjsOptions: {
+      esmExternals: true
+    },
   }
 })
