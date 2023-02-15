@@ -1,6 +1,5 @@
 <script>
-// window.Fuse
-// highlight filter
+
 import FuzzySearch from "fuzzy-search";
 import axios from "axios";
 export default {
@@ -14,23 +13,17 @@ export default {
     };
   },
   computed: {
-    transform() {
-      console.log("here we go");
-      if (this.search === "") return this.fetchData();
-      const searcher = new FuzzySearch(this.data, ["name.official"]);
-      const result = searcher.search(this.search);
-      this.data = result;
-      console.log(result, "result");
-      return result;
-    },
+   
   },
-  watch: {},
+  watch: {
+     
+  },
 
   mounted() {
     this.fetchData();
   },
   methods: {
-    fetchData() {
+    fetchData: function() {
       axios
         .get("https://restcountries.com/v3.1/all")
         .then((res) => {
@@ -40,25 +33,57 @@ export default {
           console.log(err, "err");
         });
     },
+     fuzzySearch: function() {
+      console.log("herer")
+      if (this.search === "") return this.fetchData();
+      const searcher = new FuzzySearch(this.data, ["name.official"]);
+      const result = searcher.search(this.search);
+      this.data = result;
+      console.log(result, "result");
+      return result;
+    },
   },
+ 
 };
 </script>
 
 <template>
   <div>
-  
-  <form>   
-      <label  for="default-search" class="m-2 text-sm font-medium text-gray-100 sr-only text-white">Search</label>
-      <div class="relative">
+      <section>
+          <label
+          for="default-search"
+          class="m-2 text-sm font-medium text-gray-100 sr-only text-white"
+          >Search</label
+          >
+        <div class="relative">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
           </div>
-          <input v-model="search" @keydown="transform" type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required>
-          <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
-      </div>
-  </form>
+          <input
+            v-model="search"
+            @keyup="fuzzySearch"
+            id="default-search"
+            class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none max-w-lg"
+            placeholder="Search Country Name..."
+            required
+          />
+        </div>
+      </section>
 
-    <input type="text"  />
 
     <div class="flex">
       <button
@@ -74,31 +99,38 @@ export default {
         Sort DESC
       </button>
     </div>
-    <span
-      v-if="data.length == 0"
+    <span v-if="data.length == 0">
+      <div
+        class="flex p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 bg-gray-800 text-blue-400"
+        role="alert"
       >
-        <div class="flex p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 bg-gray-800 text-blue-400" role="alert">
-          <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-          
-          <div>
-            <span class="font-medium">No searching matches!</span> 
-          </div>
+        <svg
+          aria-hidden="true"
+          class="flex-shrink-0 inline w-5 h-5 mr-3"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+
+        <div>
+          <span class="font-medium">No searching matches!</span>
+        </div>
       </div>
     </span>
-    <div
-      class="flex justify-center inline-flex"
-      v-for="d in data"
-      :key="d.name.common"
-    >
+    <div class="flex justify-center inline-flex" v-for="d in data" :key="d.name.common">
       <div class="ml-4 block p-6 rounded-lg shadow-lg bg-grey max-w-sm mr-2">
         <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">
           <img class="h-16" :src="`${d.flags.png}`" alt="" />
         </h5>
-        <p class="text-gray-700 text-base w-44">
-          Official: {{ d.name.official }}
-        </p>
+        <p class="text-gray-700 text-base w-44">Official: {{ d.name.official }}</p>
         <p class="text-gray-700 text-base mb-4 w-44">
-          Native: {{ d.name.nativeName?.isl?.official }}
+          Native: {{ d.name.nativeName + d.languages?.official }}
         </p>
         <p class="text-gray-700 text-base mb-4 w-44">
           Alternative Country Name: {{ d.altSpellings[0] }}
@@ -161,9 +193,7 @@ export default {
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 ></path>
               </svg>
-              <h3
-                class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"
-              >
+              <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                 Are you sure you want to delete this product?
               </h3>
               <button
@@ -188,4 +218,8 @@ export default {
   </div>
 </template>
 
-<style scoped></style>
+<style >
+  html{
+    padding: 2rem;
+  }
+</style>
